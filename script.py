@@ -1,64 +1,201 @@
-import getpass
+import random
 import os
 
-def cabecalho():
-    
+def linha():
     linha = '-' * 80
+    print(linha)
+
+def cabecalho():
     titulo = 'JOGO DA FORCA'
-    print(linha)
+    linha()
     print(titulo.center(80))
-    print(linha)
+    linha()
+
+
 def instrucoes():
-    print('INSTRUÇÕES: O jogo da forca consiste na adivinhação de uma palavra secreta deteminada por um dos participantes. Os demais irão chutar letras completando a palavra antes que as chances acabem.\n')
-def jogar():
-    os.system('cls') or None
+    print(
+        'INSTRUÇÕES: O jogador tem que acertar qual é a palavra proposta, tendo como dica o número de letras e o tema '
+        'ligado à palavra. A cada letra errada, é desenhado uma parte do corpo do enforcado. O jogo termina ou com o '
+        'acerto da palavra ou com o término do preenchimento das partes corpóreas do enforcado.\n')
+
+
+def menu_iniciar():
     cabecalho()
-
-    palavra_secreta = getpass.getpass('Vamos começar...\nQual a palavra secreta? \n')
-    palavra_secreta = palavra_secreta.upper()
-    letras_acertadas = ['_' for letra in palavra_secreta]
-    chances = 6
-    
-    print(f'A palavra secreta possui {len(palavra_secreta)} letras. Você possui {chances} chances. Boa sorte!')
-    print(letras_acertadas)
-
-    acertou = False
-    enforcou = False
-
-    while not enforcou and not acertou:
-        chute = input('Digite uma letra...')
-        chute = chute.strip().upper()
-
-        if chute in palavra_secreta:
-            index = 0
-            for letra in palavra_secreta:
-                if chute == letra:
-                    letras_acertadas[index] = letra
-                index +=1    
-        else:
-            chances -= 1
-    
-        enforcou = chances == 0
-        acertou = '_' not in letras_acertadas
-        print(letras_acertadas)
-
-    if(acertou):
-        print('Você ganhou!!')
-    else:
-        print('Você perdeu!')
-    
-    print('Fim de Jogo')
-def inicio():
     modo_iniciar = int(input('Olá você deseja ler as intruções?\n [1] Sim\n [2] Não\n'))
     if modo_iniciar == 1:
         instrucoes()
         input('Pressione ENTER para continuar')
-        jogar()
+        linha()
     elif modo_iniciar == 2:
-        jogar()
+        input('Pressione ENTER para continuar')
+        linha()
     else:
         print('Desculpe, não entendi.')
-        inicio()
+        menu_iniciar()
 
-cabecalho()
-inicio()
+
+def escolhe_tema():
+    global arquivo
+    tema = int(input('Escolha um tema para a palavra secreta\n TEMAS:\n [1] Cores\n [2] Frutas\n'))
+
+    if tema == 1:
+        arquivo = open("cores.txt", "r")
+    elif tema == 2:
+        arquivo = open("frutas.txt", "r")
+    else:
+        print('Digite uma opção válida.')
+        escolhe_tema()
+
+    palavras: list[str] = []
+    for linha in arquivo:
+        linha = linha.strip()
+        palavras.append(linha)
+
+    arquivo.close()
+    return palavras
+
+
+def define_palavra():
+    palavras = escolhe_tema()
+    numero = random.randrange(0, len(palavras))
+    palavra_secreta = palavras[numero].upper()
+    return palavra_secreta
+
+
+def pede_chute():
+    chute = input("Chute letra: ")
+    chute = chute.strip().upper()
+    return chute
+
+
+def marca_chute_correto(chute, acertos, palavra_secreta):
+    index = 0
+    for letra in palavra_secreta:
+        if (chute == letra):
+            acertos[index] = letra
+        index += 1
+
+
+def forca(erros):
+    print("  _______     ")
+    print(" |/      |    ")
+
+    if (erros == 1):
+        print(" |      (_)   ")
+        print(" |            ")
+        print(" |            ")
+        print(" |            ")
+
+    if (erros == 2):
+        print(" |      (_)   ")
+        print(" |      \     ")
+        print(" |            ")
+        print(" |            ")
+
+    if (erros == 3):
+        print(" |      (_)   ")
+        print(" |      \|    ")
+        print(" |            ")
+        print(" |            ")
+
+    if (erros == 4):
+        print(" |      (_)   ")
+        print(" |      \|/   ")
+        print(" |            ")
+        print(" |            ")
+
+    if (erros == 5):
+        print(" |      (_)   ")
+        print(" |      \|/   ")
+        print(" |       |    ")
+        print(" |            ")
+
+    if (erros == 6):
+        print(" |      (_)   ")
+        print(" |      \|/   ")
+        print(" |       |    ")
+        print(" |      /     ")
+
+    if (erros == 7):
+        print(" |      (_)   ")
+        print(" |      \|/   ")
+        print(" |       |    ")
+        print(" |      / \   ")
+
+    print(" |            ")
+    print("_|___         ")
+    print()
+
+
+def mensagem_vitoria():
+    print('Parabéns, você ganhou!')
+    print("       ___________      ")
+    print("      '._==_==_=_.'     ")
+    print("      .-\\:      /-.    ")
+    print("     | (|:.     |) |    ")
+    print("      '-|:.     |-'     ")
+    print("        \\::.    /      ")
+    print("         '::. .'        ")
+    print("           ) (          ")
+    print("         _.' '._        ")
+    print("        '-------'       ")
+
+
+def mensagem_derrota(palavra_secreta):
+    print('Você foi enforcado!')
+    print(f'A palavra era {palavra_secreta}')
+    print("    _______________         ")
+    print("   /               \       ")
+    print("  /                 \      ")
+    print("//                   \/\  ")
+    print("\|   XXXX     XXXX   | /   ")
+    print(" |   XXXX     XXXX   |/     ")
+    print(" |   XXX       XXX   |      ")
+    print(" |                   |      ")
+    print(" \__      XXX      __/     ")
+    print("   |\     XXX     /|       ")
+    print("   | |           | |        ")
+    print("   | I I I I I I I |        ")
+    print("   |  I I I I I I  |        ")
+    print("   \_             _/       ")
+    print("     \_         _/         ")
+    print("       \_______/           ")
+
+
+def jogar():
+    menu_iniciar()
+    palavra_secreta = define_palavra()
+
+    acertos = ['_' for letra in palavra_secreta]
+    print(f'A palavra secreta possui {len(palavra_secreta)} letras. Boa sorte!')
+    print(acertos)
+
+    enforcou = False
+    acertou = False
+    erros = 0
+
+    while (not enforcou and not acertou):
+        chute = pede_chute()
+
+        if (chute in palavra_secreta):
+            marca_chute_correto(chute, acertos, palavra_secreta)
+        else:
+            erros += 1
+            forca(erros)
+
+        enforcou = erros == 7
+        acertou = '_' not in acertos
+
+        print(acertos)
+
+    if (acertou):
+        mensagem_vitoria()
+    else:
+        mensagem_derrota(palavra_secreta)
+
+    input('')
+
+
+
+if __name__ == "__main__":
+    jogar()

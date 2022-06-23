@@ -1,0 +1,12 @@
+vermelho
+azul
+amarelo
+verde
+laranja
+roxo
+cinza
+preto
+branco
+roso
+vinho
+amarelo queimado
