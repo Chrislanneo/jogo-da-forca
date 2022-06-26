@@ -25,23 +25,22 @@ def menu_iniciar():
     if modo_iniciar == 1:
         instrucoes()
         input('Pressione ENTER para continuar')
-        linha()
     elif modo_iniciar == 2:
         input('Pressione ENTER para continuar')
-        linha()
     else:
         print('Desculpe, não entendi.')
         menu_iniciar()
 
-
+    os.system('cls' if os.name == 'nt' else 'clear')
 def escolhe_tema():
+    cabecalho()
     global arquivo
-    tema = int(input('Escolha um tema para a palavra secreta\n TEMAS:\n [1] Cores\n [2] Frutas\n'))
+    tema = int(input("Escolha um tema para a palavra secreta\n TEMAS:\n [1] Cores\n [2] Frutas\n"))
 
     if tema == 1:
-        arquivo = open("cores.txt", "r")
+        arquivo = open("cores.txt")
     elif tema == 2:
-        arquivo = open("frutas.txt", "r")
+        arquivo = open("frutas.txt")
     else:
         print('Digite uma opção válida.')
         escolhe_tema()
@@ -51,7 +50,6 @@ def escolhe_tema():
         linha = linha.strip()
         palavras.append(linha)
 
-    arquivo.close()
     return palavras
 
 
@@ -70,6 +68,11 @@ def pede_chute():
 
 def marca_chute_correto(chute, acertos, palavra_secreta):
     index = 0
+    if chute == palavra_secreta:
+        for letra in chute:
+            acertos[index] = letra
+            index += 1
+
     for letra in palavra_secreta:
         if (chute == letra):
             acertos[index] = letra
@@ -167,7 +170,7 @@ def jogar():
     palavra_secreta = define_palavra()
 
     acertos = ['_' for letra in palavra_secreta]
-    print(f'A palavra secreta possui {len(palavra_secreta)} letras. Boa sorte!')
+    print(f'\nA palavra secreta possui {len(palavra_secreta)} letras. Boa sorte!\n')
     print(acertos)
 
     enforcou = False

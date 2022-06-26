@@ -9,4 +9,3 @@ preto
 branco
 roso
 vinho
-amarelo queimado
